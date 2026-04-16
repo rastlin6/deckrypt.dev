@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DECKRYPT — Every card is a command</title>
+<meta name="description" content="DECKRYPT is a roguelike deck-builder where every card is a hacking command. Coming soon to Steam.">
+<meta name="theme-color" content="#0a0a0a">
+
+<!-- Open Graph -->
+<meta property="og:title" content="DECKRYPT — Every card is a command">
+<meta property="og:description" content="A roguelike deck-builder where every card is a hacking command. Hack servers. Build combos. Stay silent... or go loud.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://deckrypt.dev">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="DECKRYPT">
+<meta name="twitter:description" content="Every card is a command. Roguelike deck-builder. Coming to Steam.">
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --green: #39ff14;
+  --cyan: #00fff7;
+  --magenta: #ff2bff;
+  --dim: #1a3a1a;
+  --bg: #0a0a0a;
+  --text: #b0ffb0;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'JetBrains Mono', 'Courier New', monospace;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanlines */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 0, 0.015) 2px,
+    rgba(0, 255, 0, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 1000;
+}
+
+/* Vignette */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
+  pointer-events: none;
+  z-index: 999;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 60px 24px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Terminal prompt */
+.prompt {
+  font-size: 14px;
+  color: var(--dim);
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+/* Logo */
+.logo {
+  font-size: clamp(36px, 8vw, 72px);
+  font-weight: 700;
+  color: var(--green);
+  text-shadow:
+    0 0 10px var(--green),
+    0 0 30px rgba(57, 255, 20, 0.4),
+    0 0 60px rgba(57, 255, 20, 0.2);
+  letter-spacing: 8px;
+  text-align: center;
+  position: relative;
+}
+.logo .cursor {
+  display: inline-block;
+  width: 3px;
+  height: 0.9em;
+  background: var(--green);
+  margin-left: 4px;
+  vertical-align: text-bottom;
+  animation: blink 1s step-end infinite;
+}
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Tagline */
+.tagline {
+  font-size: clamp(14px, 3vw, 20px);
+  color: var(--cyan);
+  text-align: center;
+  text-shadow: 0 0 15px rgba(0, 255, 247, 0.3);
+  letter-spacing: 2px;
+}
+
+/* Terminal block */
+.terminal {
+  background: rgba(0, 20, 0, 0.6);
+  border: 1px solid var(--dim);
+  border-radius: 4px;
+  padding: 20px 24px;
+  width: 100%;
+  max-width: 600px;
+  font-size: 13px;
+  line-height: 1.8;
+  color: var(--text);
+}
+.terminal .line { opacity: 0; animation: typeLine 0.3s forwards; }
+.terminal .line:nth-child(1) { animation-delay: 0.5s; }
+.terminal .line:nth-child(2) { animation-delay: 1.0s; }
+.terminal .line:nth-child(3) { animation-delay: 1.5s; }
+.terminal .line:nth-child(4) { animation-delay: 2.0s; }
+.terminal .line:nth-child(5) { animation-delay: 2.5s; }
+.terminal .line:nth-child(6) { animation-delay: 3.0s; }
+.terminal .line:nth-child(7) { animation-delay: 3.5s; }
+@keyframes typeLine { to { opacity: 1; } }
+
+.terminal .cmd { color: var(--green); }
+.terminal .val { color: var(--cyan); }
+.terminal .warn { color: var(--magenta); }
+
+/* CTA buttons */
+.cta-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.2s;
+  letter-spacing: 1px;
+  cursor: pointer;
+}
+.cta-steam {
+  background: var(--green);
+  color: var(--bg);
+  border: 2px solid var(--green);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.3);
+}
+.cta-steam:hover {
+  background: transparent;
+  color: var(--green);
+  box-shadow: 0 0 25px rgba(57, 255, 20, 0.5);
+}
+.cta-discord {
+  background: transparent;
+  color: var(--cyan);
+  border: 2px solid var(--cyan);
+}
+.cta-discord:hover {
+  background: var(--cyan);
+  color: var(--bg);
+  box-shadow: 0 0 25px rgba(0, 255, 247, 0.4);
+}
+
+/* Features */
+.features {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  width: 100%;
+  max-width: 600px;
+}
+.feature {
+  background: rgba(0, 20, 0, 0.4);
+  border: 1px solid var(--dim);
+  border-left: 3px solid var(--green);
+  padding: 14px 16px;
+  border-radius: 3px;
+}
+.feature-title {
+  font-size: 12px;
+  color: var(--green);
+  font-weight: 700;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+.feature-desc {
+  font-size: 11px;
+  color: var(--text);
+  opacity: 0.7;
+  line-height: 1.5;
+}
+
+/* Footer */
+.footer {
+  font-size: 11px;
+  color: var(--dim);
+  text-align: center;
+  margin-top: 20px;
+}
+.footer a { color: var(--dim); text-decoration: none; }
+.footer a:hover { color: var(--green); }
+
+/* Glitch effect on hover */
+.logo:hover {
+  animation: glitch 0.3s;
+}
+@keyframes glitch {
+  0% { text-shadow: 0 0 10px var(--green), -2px 0 var(--magenta), 2px 0 var(--cyan); }
+  25% { text-shadow: 0 0 10px var(--green), 2px 0 var(--magenta), -2px 0 var(--cyan); }
+  50% { text-shadow: 0 0 10px var(--green), -1px 2px var(--magenta), 1px -2px var(--cyan); }
+  75% { text-shadow: 0 0 10px var(--green), 1px -1px var(--magenta), -1px 1px var(--cyan); }
+  100% { text-shadow: 0 0 10px var(--green), 0 0 30px rgba(57, 255, 20, 0.4); }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .container { padding: 40px 16px; gap: 30px; }
+  .terminal { padding: 14px 16px; font-size: 11px; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="prompt">> initiating connection...</div>
+
+  <div class="logo" id="logo"></div>
+
+  <div class="tagline">Every card is a command.</div>
+
+  <div class="terminal">
+    <div class="line"><span class="cmd">$</span> cat /game/info.txt</div>
+    <div class="line"><span class="cmd">TYPE</span> <span class="val">Roguelike Deck-Builder</span></div>
+    <div class="line"><span class="cmd">THEME</span> <span class="val">Hacking / Cybersecurity</span></div>
+    <div class="line"><span class="cmd">DECKS</span> <span class="val">RED</span> (brute force) | <span class="val">GHOST</span> (stealth) | <span class="val">BLUE</span> (defense)</div>
+    <div class="line"><span class="cmd">CHAIN</span> ping &rarr; port_scan &rarr; exploit &rarr; <span class="warn">root_access</span></div>
+    <div class="line"><span class="cmd">STATUS</span> <span class="warn">[ EARLY ACCESS — COMING SOON ]</span></div>
+    <div class="line"><span class="cmd">PLATFORM</span> <span class="val">Steam</span> | <span class="val">Steam Deck</span></div>
+  </div>
+
+  <div class="cta-row">
+    <a class="cta cta-steam" href="#" id="steam-btn">> WISHLIST ON STEAM</a>
+  </div>
+
+  <div class="features">
+    <div class="feature">
+      <div class="feature-title">BANDWIDTH + NOISE</div>
+      <div class="feature-desc">Every card costs bandwidth. Every attack makes noise. Go loud or stay silent.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-title">CHAIN COMBOS</div>
+      <div class="feature-desc">Play cards in the right order. Build chains. Hit x2, x4, x8 multipliers.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-title">DAILY HACK</div>
+      <div class="feature-desc">Same server, same seed, every day. Compete on 3 leaderboards worldwide.</div>
+    </div>
+    <div class="feature">
+      <div class="feature-title">REAL HACKING</div>
+      <div class="feature-desc">SQL Injection. Buffer Overflow. Zero-Day. The cards are real commands.</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>DECKRYPT &copy; 2026 Rastlin</p>
+    <p><a href="mailto:francois.auclair777@gmail.com">contact</a></p>
+  </div>
+
+</div>
+
+<script>
+// Logo typing effect
+const logoText = 'DECKRYPT';
+const logoEl = document.getElementById('logo');
+let i = 0;
+
+function typeLogo() {
+  if (i < logoText.length) {
+    logoEl.textContent = logoText.slice(0, i + 1);
+    // Add cursor
+    const cursor = document.createElement('span');
+    cursor.className = 'cursor';
+    logoEl.appendChild(cursor);
+    i++;
+    setTimeout(typeLogo, 120 + Math.random() * 80);
+  }
+}
+
+// Steam button placeholder
+document.getElementById('steam-btn').addEventListener('click', (e) => {
+  e.preventDefault();
+  alert('Steam page coming soon! Stay tuned.');
+});
+
+// Start after a small delay
+setTimeout(typeLogo, 300);
+</script>
+
+</body>
+</html>
