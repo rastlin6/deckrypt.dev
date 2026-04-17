@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DECKRYPT — Every card is a command</title>
-<meta name="description" content="DECKRYPT is a roguelike deck-builder where every card is a hacking command. Coming soon to Steam.">
+<meta name="description" content="DECKRYPT is a roguelike deck-builder where every card is a hacking command. Coming soon to Steam." data-i18n-meta="description">
 <meta name="theme-color" content="#0a0a0a">
 
 <!-- Open Graph -->
@@ -64,6 +64,43 @@ body::after {
   background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.6) 100%);
   pointer-events: none;
   z-index: 999;
+}
+
+/* Language toggle */
+.lang-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 4px;
+  background: rgba(0, 20, 0, 0.7);
+  border: 1px solid var(--dim);
+  border-radius: 4px;
+  padding: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  z-index: 1001;
+  backdrop-filter: blur(4px);
+}
+.lang-btn {
+  background: transparent;
+  color: var(--dim);
+  border: none;
+  padding: 6px 10px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.15s;
+  letter-spacing: 1px;
+}
+.lang-btn:hover { color: var(--text); }
+.lang-btn.active {
+  color: var(--green);
+  background: rgba(57, 255, 20, 0.1);
+  text-shadow: 0 0 8px rgba(57, 255, 20, 0.6);
 }
 
 .container {
@@ -248,60 +285,153 @@ body::after {
 @media (max-width: 480px) {
   .container { padding: 40px 16px; gap: 30px; }
   .terminal { padding: 14px 16px; font-size: 11px; }
+  .lang-toggle { top: 12px; right: 12px; }
+  .lang-btn { padding: 4px 8px; font-size: 11px; }
 }
 </style>
 </head>
 <body>
 
+<div class="lang-toggle" role="group" aria-label="Language">
+  <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+  <button class="lang-btn" data-lang="fr" aria-label="Français">FR</button>
+</div>
+
 <div class="container">
 
-  <div class="prompt">> initiating connection...</div>
+  <div class="prompt" data-i18n="prompt">&gt; initiating connection...</div>
 
   <div class="logo" id="logo"></div>
 
-  <div class="tagline">Every card is a command.</div>
+  <div class="tagline" data-i18n="tagline">Every card is a command.</div>
 
   <div class="terminal">
     <div class="line"><span class="cmd">$</span> cat /game/info.txt</div>
-    <div class="line"><span class="cmd">TYPE</span> <span class="val">Roguelike Deck-Builder</span></div>
-    <div class="line"><span class="cmd">THEME</span> <span class="val">Hacking / Cybersecurity</span></div>
-    <div class="line"><span class="cmd">DECKS</span> <span class="val">RED</span> (brute force) | <span class="val">GHOST</span> (stealth) | <span class="val">BLUE</span> (defense)</div>
+    <div class="line"><span class="cmd">TYPE</span> <span class="val" data-i18n="type">Roguelike Deck-Builder</span></div>
+    <div class="line"><span class="cmd">THEME</span> <span class="val" data-i18n="theme">Hacking / Cybersecurity</span></div>
+    <div class="line"><span class="cmd">DECKS</span> <span class="val">RED</span> <span data-i18n="deckRed">(brute force)</span> | <span class="val">GHOST</span> <span data-i18n="deckGhost">(stealth)</span> | <span class="val">BLUE</span> <span data-i18n="deckBlue">(defense)</span></div>
     <div class="line"><span class="cmd">CHAIN</span> ping &rarr; port_scan &rarr; exploit &rarr; <span class="warn">root_access</span></div>
-    <div class="line"><span class="cmd">STATUS</span> <span class="warn">[ EARLY ACCESS — COMING SOON ]</span></div>
+    <div class="line"><span class="cmd">STATUS</span> <span class="warn" data-i18n="status">[ EARLY ACCESS — COMING SOON ]</span></div>
     <div class="line"><span class="cmd">PLATFORM</span> <span class="val">Steam</span> | <span class="val">Steam Deck</span></div>
   </div>
 
   <div class="cta-row">
-    <a class="cta cta-steam" href="#" id="steam-btn">> WISHLIST ON STEAM</a>
+    <a class="cta cta-steam" href="#" id="steam-btn" data-i18n="wishlist">&gt; WISHLIST ON STEAM</a>
   </div>
 
   <div class="features">
     <div class="feature">
-      <div class="feature-title">BANDWIDTH + NOISE</div>
-      <div class="feature-desc">Every card costs bandwidth. Every attack makes noise. Go loud or stay silent.</div>
+      <div class="feature-title" data-i18n="f1Title">BANDWIDTH + NOISE</div>
+      <div class="feature-desc" data-i18n="f1Desc">Every card costs bandwidth. Every attack makes noise. Go loud or stay silent.</div>
     </div>
     <div class="feature">
-      <div class="feature-title">CHAIN COMBOS</div>
-      <div class="feature-desc">Play cards in the right order. Build chains. Hit x2, x4, x8 multipliers.</div>
+      <div class="feature-title" data-i18n="f2Title">CHAIN COMBOS</div>
+      <div class="feature-desc" data-i18n="f2Desc">Play cards in the right order. Build chains. Hit x2, x4, x8 multipliers.</div>
     </div>
     <div class="feature">
-      <div class="feature-title">DAILY HACK</div>
-      <div class="feature-desc">Same server, same seed, every day. Compete on 3 leaderboards worldwide.</div>
+      <div class="feature-title" data-i18n="f3Title">DAILY HACK</div>
+      <div class="feature-desc" data-i18n="f3Desc">Same server, same seed, every day. Compete on 3 leaderboards worldwide.</div>
     </div>
     <div class="feature">
-      <div class="feature-title">REAL HACKING</div>
-      <div class="feature-desc">SQL Injection. Buffer Overflow. Zero-Day. The cards are real commands.</div>
+      <div class="feature-title" data-i18n="f4Title">REAL HACKING</div>
+      <div class="feature-desc" data-i18n="f4Desc">SQL Injection. Buffer Overflow. Zero-Day. The cards are real commands.</div>
     </div>
   </div>
 
   <div class="footer">
     <p>DECKRYPT &copy; 2026 Rastlin</p>
-    <p><a href="mailto:francois.auclair777@gmail.com">contact</a></p>
+    <p><a href="mailto:francois.auclair777@gmail.com" data-i18n="contact">contact</a></p>
   </div>
 
 </div>
 
 <script>
+const I18N = {
+  en: {
+    title: 'DECKRYPT — Every card is a command',
+    description: 'DECKRYPT is a roguelike deck-builder where every card is a hacking command. Coming soon to Steam.',
+    prompt: '> initiating connection...',
+    tagline: 'Every card is a command.',
+    type: 'Roguelike Deck-Builder',
+    theme: 'Hacking / Cybersecurity',
+    deckRed: '(brute force)',
+    deckGhost: '(stealth)',
+    deckBlue: '(defense)',
+    status: '[ EARLY ACCESS — COMING SOON ]',
+    wishlist: '> WISHLIST ON STEAM',
+    f1Title: 'BANDWIDTH + NOISE',
+    f1Desc: 'Every card costs bandwidth. Every attack makes noise. Go loud or stay silent.',
+    f2Title: 'CHAIN COMBOS',
+    f2Desc: 'Play cards in the right order. Build chains. Hit x2, x4, x8 multipliers.',
+    f3Title: 'DAILY HACK',
+    f3Desc: 'Same server, same seed, every day. Compete on 3 leaderboards worldwide.',
+    f4Title: 'REAL HACKING',
+    f4Desc: 'SQL Injection. Buffer Overflow. Zero-Day. The cards are real commands.',
+    contact: 'contact',
+    steamAlert: 'Steam page coming soon! Stay tuned.'
+  },
+  fr: {
+    title: 'DECKRYPT — Chaque carte est une commande',
+    description: 'DECKRYPT est un deck-builder roguelike où chaque carte est une commande de piratage. Bientôt sur Steam.',
+    prompt: '> connexion en cours...',
+    tagline: 'Chaque carte est une commande.',
+    type: 'Deck-Builder Roguelike',
+    theme: 'Piratage / Cybersécurité',
+    deckRed: '(force brute)',
+    deckGhost: '(furtif)',
+    deckBlue: '(défense)',
+    status: '[ ACCÈS ANTICIPÉ — BIENTÔT ]',
+    wishlist: '> AJOUTER À MA LISTE STEAM',
+    f1Title: 'BANDE PASSANTE + BRUIT',
+    f1Desc: 'Chaque carte coûte de la bande passante. Chaque attaque fait du bruit. Fonce ou reste discret.',
+    f2Title: 'COMBOS EN CHAÎNE',
+    f2Desc: 'Joue les cartes dans le bon ordre. Enchaîne les combos. Atteins les multiplicateurs x2, x4, x8.',
+    f3Title: 'HACK QUOTIDIEN',
+    f3Desc: 'Même serveur, même seed, chaque jour. Affronte le monde entier sur 3 classements.',
+    f4Title: 'PIRATAGE RÉEL',
+    f4Desc: 'Injection SQL. Dépassement de tampon. Zero-Day. Les cartes sont de vraies commandes.',
+    contact: 'contact',
+    steamAlert: 'Page Steam bientôt disponible! Reste à l\u2019affût.'
+  }
+};
+
+function applyLang(lang) {
+  if (!I18N[lang]) lang = 'en';
+  const dict = I18N[lang];
+
+  document.documentElement.lang = lang;
+  document.title = dict.title;
+
+  const metaDesc = document.querySelector('meta[name="description"]');
+  if (metaDesc) metaDesc.setAttribute('content', dict.description);
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (dict[key] !== undefined) el.textContent = dict[key];
+  });
+
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+
+  try { localStorage.setItem('deckrypt_lang', lang); } catch (e) {}
+}
+
+function detectInitialLang() {
+  try {
+    const saved = localStorage.getItem('deckrypt_lang');
+    if (saved && I18N[saved]) return saved;
+  } catch (e) {}
+  const nav = (navigator.language || 'en').toLowerCase();
+  return nav.startsWith('fr') ? 'fr' : 'en';
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+});
+
+applyLang(detectInitialLang());
+
 // Logo typing effect
 const logoText = 'DECKRYPT';
 const logoEl = document.getElementById('logo');
@@ -310,7 +440,6 @@ let i = 0;
 function typeLogo() {
   if (i < logoText.length) {
     logoEl.textContent = logoText.slice(0, i + 1);
-    // Add cursor
     const cursor = document.createElement('span');
     cursor.className = 'cursor';
     logoEl.appendChild(cursor);
@@ -319,13 +448,12 @@ function typeLogo() {
   }
 }
 
-// Steam button placeholder
 document.getElementById('steam-btn').addEventListener('click', (e) => {
   e.preventDefault();
-  alert('Steam page coming soon! Stay tuned.');
+  const lang = document.documentElement.lang || 'en';
+  alert(I18N[lang] ? I18N[lang].steamAlert : I18N.en.steamAlert);
 });
 
-// Start after a small delay
 setTimeout(typeLogo, 300);
 </script>
 
